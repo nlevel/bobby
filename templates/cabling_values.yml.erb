@@ -1,0 +1,10 @@
+<%= @app_name %>:
+<% @values.each do |k, v| -%>
+  '<%= k %>': '<%= v -%>'
+<% end -%>
+<% if defined?(@env) -%>
+  '.env':
+     <% @env.each do |k,v| -%>
+     '<%= k %>': <%= v -%>
+     <% end -%>
+<% end -%>

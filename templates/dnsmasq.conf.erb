@@ -1,0 +1,16 @@
+listen-address=<%= @dnsmasq_conf['listen_address'] %>
+
+<% @dnsmasq_conf['servers'].each do |domain, h| -%>
+<% if !h.nil? && !h['disable'] -%>
+server=/<%= domain %>/<%= h['dns_server'] %>
+<% end -%>
+<% end -%>
+
+# hard-coded host-ip maps
+<% @dnsmasq_conf['host_addresses'].each do |host, h| -%>
+<% if !h.nil? && !h['disable'] -%>
+address=/<%= host %>/<%= h['ip'] %>
+<% end -%>
+<% end -%>
+
+conf-dir=<%= ('%s/,*.conf' % @dnsmasq_conf_d) %>

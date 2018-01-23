@@ -1,0 +1,37 @@
+server {
+  listen <%= node['nginx']['port'] -%>;
+  server_name <%= @site_vars['server_name']  %>;
+
+  access_log <%= node['nginx']['log_dir'] %>/<%= @site_vars['server_name'] %>.access.log;
+  error_log <%= node['nginx']['log_dir'] %>/<%= @site_vars['server_name'] %>.errors.log;
+
+  location / {
+    root   <%= @site_vars.fetch('document_root', node['nginx']['default_root']) %>;
+    index  index.html index.htm index.php;
+
+    <% if @site_vars['enable_fpm'] -%>
+    location ~ [^/]\.php(/|$) {
+      # include the fastcgi_param setting
+      include fastcgi_params;
+
+      fastcgi_split_path_info ^(.+?\.php)(/.*)$;
+
+      if (!-f $document_root$fastcgi_script_name) {
+        return 404;
+      }
+
+      # Mitigate https://httpoxy.org/ vulnerabilities
+      fastcgi_param HTTP_PROXY "";
+
+      fastcgi_pass <%= @site_vars['fastcgi_socket'] %>;
+      fastcgi_index index.php;
+
+      # SCRIPT_FILENAME parameter is used for PHP FPM determining
+      # the script name. If it is not set in fastcgi_params file,
+      # i.e. /etc/nginx/fastcgi_params or in the parent contexts,
+      # please comment off following line:
+      fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+    }
+    <% end -%>
+  }
+}

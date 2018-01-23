@@ -1,0 +1,8 @@
+include_recipe 'apache2'
+include_recipe 'apache2::mod_ssl'
+include_recipe 'apache2::mod_fastcgi'
+include_recipe 'apache2::mod_proxy'
+include_recipe 'apache2::mod_proxy_fcgi'
+include_recipe 'apache2::mod_rewrite'
+include_recipe 'apache2::mod_deflate'
+include_recipe 'apache2::mod_headers'
