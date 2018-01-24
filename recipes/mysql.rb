@@ -33,7 +33,7 @@ end
 mysql_config['databases'].each do |dbname, dinfo|
   bobby_mysql_database(dbname) do
     charset dinfo.fetch('charset', 'utf8')
-    collate dinfo.fetch('collate', 'utf8_general_ci')
+    collate dinfo.fetch('collate', 'utf8_unicode_ci')
 
     action :create
   end

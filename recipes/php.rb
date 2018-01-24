@@ -32,11 +32,15 @@ include_recipe 'php::module_gd'
 include_recipe 'php::module_mysql'
 include_recipe 'php::module_sqlite3'
 
+package [ 'php5.6-xmlrpc', 'php5.6-xml' ] do
+  action :install
+end
+
 php_fpm_pool 'default' do
   action :install
 end
 
-if node.recipe?('apache2')
+if node.recipe?('bobby::apache2')
   apache_config 'php5.6-cgi' do
     enable :true
   end

@@ -48,25 +48,17 @@ end
 end
 
 if node.recipe?('bobby::apache2')
-  pma_htaccess_path = File.join(home_path, '.htaccess')
-  pma_htaccess_params = {
-    'php_handler' => 'proxy:unix:%s|fcgi://127.0.0.1:9000' % node['phpmyadmin']['socket']
+  this_site_vars = {
+    'server_name' => node['phpmyadmin']['server_name'],
+    'document_root' => home_path,
+    'fastcgi_socket' => node['phpmyadmin']['socket']
   }
 
-  template pma_htaccess_path do
-    user node['phpmyadmin']['user']
-    group node['phpmyadmin']['group']
-    source 'pma_htaccess.erb'
-    variables(:params => pma_htaccess_params)
-  end
+  bobby_apache_site node['phpmyadmin']['server_name'] do
+    site_vars this_site_vars
+    use_fpm true
 
-  web_app node['phpmyadmin']['server_name'] do
-    server_name node['phpmyadmin']['server_name']
-    server_port 80
-    docroot home_path
-    enable true
-    cookbook 'apache2'
-    allow_override 'FileInfo'
+    action :create
   end
 elsif node.recipe?('bobby::nginx')
   this_site_vars = {

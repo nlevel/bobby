@@ -19,7 +19,8 @@ build_packages = [
   'libsqlite3-dev',
   'libgdbm-dev',
   'libffi-dev',
-  'ncurses-dev'
+  'ncurses-dev',
+  'bison'
 ]
 
 apt_package build_packages do
@@ -82,7 +83,8 @@ rconfig['users'].each do |user, rvm_config|
     'default_ruby' => rvm_config['default_ruby'],
     'rubies' => rubies,
     'rvmrc' => {
-      'rvm_max_time_flag' => '20'
+      'rvm_max_time_flag' => '20',
+      'rvm_autoupdate_flag' => '0'
     }
   }
 
