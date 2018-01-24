@@ -69,18 +69,16 @@ if node.recipe?('bobby::apache2')
     allow_override 'FileInfo'
   end
 elsif node.recipe?('bobby::nginx')
-  site_vars = {
+  this_site_vars = {
     'server_name' => node['phpmyadmin']['server_name'],
     'document_root' => home_path,
-    'enable_fpm' => true,
     'fastcgi_socket' => 'unix:%s' % node['phpmyadmin']['socket']
   }
 
-  nginx_site node['phpmyadmin']['server_name'] do
-    variables(:site_vars => site_vars)
+  bobby_nginx_site node['phpmyadmin']['server_name'] do
+    site_vars this_site_vars
+    use_fpm true
 
-    cookbook 'bobby'
-    template 'nginx_site.conf.erb'
-    enable true
+    action :create
   end
 end

@@ -29,3 +29,12 @@ mysql_config['users'].each do |uname, uinfo|
     action :create
   end
 end
+
+mysql_config['databases'].each do |dbname, dinfo|
+  bobby_mysql_database(dbname) do
+    charset dinfo.fetch('charset', 'utf8')
+    collate dinfo.fetch('collate', 'utf8_general_ci')
+
+    action :create
+  end
+end

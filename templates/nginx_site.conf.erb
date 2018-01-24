@@ -5,11 +5,11 @@ server {
   access_log <%= node['nginx']['log_dir'] %>/<%= @site_vars['server_name'] %>.access.log;
   error_log <%= node['nginx']['log_dir'] %>/<%= @site_vars['server_name'] %>.errors.log;
 
-  location / {
-    root   <%= @site_vars.fetch('document_root', node['nginx']['default_root']) %>;
-    index  index.html index.htm index.php;
+  root   <%= @site_vars.fetch('document_root', node['nginx']['default_root']) %>;
+  index  index.html index.htm index.php;
 
-    <% if @site_vars['enable_fpm'] -%>
+  <% if @use_fpm -%>
+  location / {
     location ~ [^/]\.php(/|$) {
       # include the fastcgi_param setting
       include fastcgi_params;
@@ -23,7 +23,7 @@ server {
       # Mitigate https://httpoxy.org/ vulnerabilities
       fastcgi_param HTTP_PROXY "";
 
-      fastcgi_pass <%= @site_vars['fastcgi_socket'] %>;
+      fastcgi_pass <%= @site_vars.fetch('fastcgi_socket', '/var/run/php5.6-fpm.sock') %>;
       fastcgi_index index.php;
 
       # SCRIPT_FILENAME parameter is used for PHP FPM determining
@@ -32,6 +32,28 @@ server {
       # please comment off following line:
       fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
     }
-    <% end -%>
   }
+  <% end -%>
+
+  <% if @use_puma -%>
+  try_files $uri/index.html $uri @app;
+
+  location @app {
+    proxy_pass http://<%= @site_vars['app_name'] %>;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header Host $http_host;
+    proxy_redirect off;
+  }
+
+  error_page 500 502 503 504 /500.html;
+  client_max_body_size 4G;
+  keepalive_timeout 10;
+  <% end -%>
 }
+
+<% if @use_puma -%>
+upstream <%= @site_vars['app_name'] %> {
+  server 127.0.0.1:<%= @site_vars.fetch('puma_port', 3000) %> fail_timeout=0;
+}
+<% end -%>

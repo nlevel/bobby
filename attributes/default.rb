@@ -43,7 +43,8 @@ config = {
     'bind_port' => 3306,
     'root_password' => '',
 
-    'users' => { }
+    'users' => { },
+    'databases' => { }
   },
 
   'mariadb' => {
