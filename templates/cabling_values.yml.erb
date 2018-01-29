@@ -2,9 +2,9 @@
 <% @values.each do |k, v| -%>
   '<%= k %>': '<%= v -%>'
 <% end -%>
-<% if defined?(@env) -%>
+<% if defined?(@env) && !@env.nil? && !@env.empty? -%>
   '.env':
      <% @env.each do |k,v| -%>
-     '<%= k %>': <%= v -%>
+     '<%= k %>': '<%= v %>'
      <% end -%>
 <% end -%>

@@ -61,6 +61,10 @@ config = {
     'users' => { }
   },
 
+  'cabling' => {
+    'options' => { }
+  },
+
   'ufw' => {
 
   },
