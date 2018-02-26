@@ -32,7 +32,9 @@ include_recipe 'php::module_gd'
 include_recipe 'php::module_mysql'
 include_recipe 'php::module_sqlite3'
 
-package [ 'php5.6-xmlrpc', 'php5.6-xml' ] do
+# additional packages by requests
+# please be frugal, to avoid bloating
+package [ 'php5.6-xmlrpc', 'php5.6-xml', 'php5.6-zip' ] do
   action :install
 end
 
