@@ -1,7 +1,9 @@
 config = {
   'params' => {
     'loopback_ip' => '127.0.0.1',
-    'private_ip' => nil
+    'private_ip' => nil,
+    'subnet' => nil,
+    'subnet_mask' => nil
   },
 
   'apt' => {
@@ -35,6 +37,14 @@ config = {
     'clients' => {
 
     }
+  },
+
+  'consul' => {
+    'install_version' => '1.5.1'
+  },
+
+  'haproxy' => {
+    'certs' => { }
   },
 
   'mysql' => {
@@ -86,6 +96,7 @@ config['apt']['packages'] += [
   'software-properties-common',
   'apt-transport-https',
   'curl',
+  'gnupg-agent',
   'wget',
   'nfs-common',
   'ca-certificates',
@@ -95,8 +106,10 @@ config['apt']['packages'] += [
   'openssl',
   'ssl-cert',
   'tmux',
+  'docker-ce',
+  'docker-ce-cli',
+  'containerd.io',
   'sqlite3',
-  'docker-engine',
   'git-core',
   'emacs-nox',
   'mg',

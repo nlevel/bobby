@@ -37,7 +37,6 @@ if !sudo_user.nil? && !sudo_user.empty? && !existing_users.include?(sudo_user)
   existing_users << sudo_user
 end
 
-all_users = existing_users + add_users
 all_sudo_users = existing_users + sudo_users
 
 sudo_groups = node.default['authorization']['sudo']['groups']

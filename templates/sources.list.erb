@@ -1,0 +1,20 @@
+#------------------------------------------------------------------------------#
+#                            OFFICIAL UBUNTU REPOS                             #
+#------------------------------------------------------------------------------#
+
+
+###### Ubuntu Main Repos
+deb <%= @ubuntu_mirror_url %> xenial main restricted universe
+deb-src <%= @ubuntu_mirror_url %> xenial main restricted universe
+
+###### Ubuntu Security Repos
+deb <%= @ubuntu_mirror_url %> xenial-security main restricted universe
+deb-src <%= @ubuntu_mirror_url %> xenial-security main restricted universe
+
+###### Ubuntu Update Repos
+deb <%= @ubuntu_mirror_url %> xenial-updates main restricted universe
+deb-src <%= @ubuntu_mirror_url %> xenial-updates main restricted universe
+
+###### Ubuntu backports
+deb <%= @ubuntu_mirror_url %> xenial-backports main restricted universe
+deb-src <%= @ubuntu_mirror_url %> xenial-backports main restricted universe

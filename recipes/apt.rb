@@ -15,10 +15,11 @@ Acqu        ire::https::proxy \"%s\";" % [ apt_http_proxy, apt_http_proxy ]
 end
 
 apt_repository 'docker' do
-  uri 'https://apt.dockerproject.org/repo'
-  distribution '%s-%s' % [ node['platform'], node['lsb']['codename'] ]
-  components [ 'main' ]
-  key '58118E89F3A912897C070ADBF76221572C52609D'
+  uri 'https://download.docker.com/linux/%s' % node['platform']
+  arch 'amd64'
+  keyserver 'keyserver.ubuntu.com'
+  key 'https://download.docker.com/linux/%s/gpg' % node['platform']
+  components [ 'stable' ]
 end
 
 apt_repository 'php' do
