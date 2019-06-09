@@ -38,7 +38,6 @@ DEFAULT_CLIENT_CONFIG = {
 node.override['openvpn']['configure_default_server'] = false
 
 include_recipe 'openvpn::default'
-
 include_recipe 'openvpn::enable_ip_forwarding'
 
 sysctl 'net.ipv4.ip_forward' do
