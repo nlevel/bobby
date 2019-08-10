@@ -84,6 +84,12 @@ servers.each do |s_name, s_config|
     cert_k_indb = ovpn_config[cert_k]
 
     unless cert_k_indb.nil?
+      if cert_k_indb.is_a?(Array)
+        cert_k_indb, cert_k_extras = cert_k_indb
+      else
+        cert_k_extras = nil
+      end
+
       cert_info = data_bag_item('certs', cert_k_indb)
       unless cert_info.nil?
         cert_fname = File.join(certs_path, cert_info['fname'])
@@ -96,6 +102,9 @@ servers.each do |s_name, s_config|
         end
 
         ovpn_config[cert_k] = '%s/%s' % [ CERTS_SUBPATH, cert_info['fname'] ]
+        unless cert_k_extras.nil?
+          ovpn_config[cert_k] += ' %s' % cert_k_extras
+        end
       else
         raise "Cert with key '%s' not found in databag" % cert_k_indb
       end
@@ -110,6 +119,25 @@ servers.each do |s_name, s_config|
       group 'root'
       recursive true
       action :create
+    end
+
+    unless ovpn_config['client-config'].nil?
+      ovpn_config['client-config'].each do |sc_key, sc_config|
+        if sc_config.is_a?(Array)
+          sc_config = sc_config.join("\n")
+        end
+
+        sc_config_fname = File.join(ccd_path, sc_key)
+        file sc_config_fname do
+          content sc_config
+          user 'root'
+          group 'root'
+          mode '0644'
+          action :create
+        end
+      end
+
+      ovpn_config.delete('client-config')
     end
   end
 
@@ -161,6 +189,12 @@ clients.each do |c_name, c_config|
     cert_k_indb = ovpn_config[cert_k]
 
     unless cert_k_indb.nil?
+      if cert_k_indb.is_a?(Array)
+        cert_k_indb, cert_k_extras = cert_k_indb
+      else
+        cert_k_extras = nil
+      end
+
       cert_k_indb, cert_params = cert_k_indb.split(' ', 2)
       cert_info = data_bag_item('certs', cert_k_indb)
 
@@ -175,6 +209,9 @@ clients.each do |c_name, c_config|
         end
 
         ovpn_config[cert_k] = '%s/%s' % [ CERTS_SUBPATH, cert_info['fname'] ]
+        unless cert_k_extras.nil?
+          ovpn_config[cert_k] += ' %s' % cert_k_extras
+        end
 
         if !cert_params.nil?
           ovpn_config[cert_k] = '%s %s' % [ ovpn_config[cert_k], cert_params ]
