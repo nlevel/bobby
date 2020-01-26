@@ -108,6 +108,7 @@ config['apt']['packages'] += [
   'tmux',
   'docker-ce',
   'docker-ce-cli',
+  'docker-compose',
   'containerd.io',
   'sqlite3',
   'git-core',
